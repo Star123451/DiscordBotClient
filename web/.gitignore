@@ -1,0 +1,14 @@
+# Development files
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Environment files (if added later)
+.env
+.env.local
+
+# Test files
+test.html
+debug.html
