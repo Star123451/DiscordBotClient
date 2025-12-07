@@ -70,10 +70,7 @@ class App {
             this.ui.updateConnectionStatus('connecting');
             await this.gateway.connect();
             
-            // Wait a bit for guilds to be ready
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Get guilds
+            // Get guilds (Gateway will provide GUILD_CREATE events)
             const guilds = await this.api.getGuilds();
             console.log('Loaded guilds:', guilds.length);
             
@@ -116,6 +113,12 @@ class App {
         this.gateway.on('disconnected', () => {
             console.log('Gateway disconnected');
             this.ui.updateConnectionStatus('disconnected');
+        });
+        
+        this.gateway.on('auth_error', (event) => {
+            console.error('Authentication error:', event.code, event.reason);
+            alert('Authentication error. Please re-login with a valid bot token.');
+            this.ui.logout();
         });
         
         // Ready event

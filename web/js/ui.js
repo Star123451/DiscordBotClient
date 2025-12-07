@@ -184,7 +184,12 @@ class UIController {
     setUserInfo(user) {
         this.user = user;
         this.username.textContent = user.username;
-        this.userTag.textContent = `#${user.discriminator}`;
+        // Discord's new username system: discriminator is '0' for new accounts
+        if (user.discriminator && user.discriminator !== '0') {
+            this.userTag.textContent = `#${user.discriminator}`;
+        } else {
+            this.userTag.textContent = '@' + user.username;
+        }
         
         // Set avatar
         const avatarUrl = app.api.getUserAvatarURL(user, 32);
@@ -430,7 +435,10 @@ class UIController {
             avatar.appendChild(img);
         } else {
             avatar.textContent = message.author.username.charAt(0).toUpperCase();
-            avatar.style.background = '#' + (parseInt(message.author.id) % 0xFFFFFF).toString(16);
+            // Use predefined accessible colors instead of random colors
+            const colors = ['#5865f2', '#3ba55d', '#faa61a', '#ed4245', '#eb459e', '#9c84ef', '#57f287'];
+            const colorIndex = parseInt(message.author.id) % colors.length;
+            avatar.style.background = colors[colorIndex];
         }
         
         // Content

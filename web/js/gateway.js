@@ -48,10 +48,14 @@ class DiscordGateway {
                 this.stopHeartbeat();
                 this.emit('disconnected', event);
                 
-                // Auto-reconnect on certain close codes
-                if ([4000, 4001, 4002, 4003, 4005, 4007, 4008, 4009].includes(event.code)) {
+                // Auto-reconnect only on recoverable close codes
+                // 4007 (invalid seq), 4008 (rate limited), 4009 (session timeout) require re-auth
+                if ([4000, 4001, 4002, 4003, 4005].includes(event.code)) {
                     console.log('Attempting to reconnect...');
                     setTimeout(() => this.connect(), 5000);
+                } else if ([4007, 4008, 4009].includes(event.code)) {
+                    console.log('Authentication issue - please re-login');
+                    this.emit('auth_error', event);
                 }
             };
 

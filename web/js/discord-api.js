@@ -214,8 +214,10 @@ class DiscordAPI {
      */
     getUserAvatarURL(user, size = 128) {
         if (!user.avatar) {
-            // Default avatar
-            const defaultAvatarNumber = parseInt(user.discriminator) % 5;
+            // Default avatar - use user ID for new username system
+            const defaultAvatarNumber = (user.discriminator && user.discriminator !== '0') 
+                ? parseInt(user.discriminator) % 5 
+                : (parseInt(user.id) >> 22) % 6;
             return `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
         }
         
@@ -269,9 +271,9 @@ class DiscordAPI {
     }
 
     /**
-     * Parse mentions in message content
+     * Parse mentions in message content (simplified version)
      */
-    parseMentions(content, guild = null) {
+    parseMentions(content) {
         // User mentions
         content = content.replace(/<@!?(\d+)>/g, '@User');
         
