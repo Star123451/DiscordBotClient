@@ -12,11 +12,29 @@ Step-by-step guide to deploy the Discord Bot Client web version to various stati
 - Message Content Intent enabled for your bot
 - A GitHub account (for most deployment options)
 
+## ⚠️ Important: CORS Proxy Requirement
+
+The web version **requires a serverless proxy** to communicate with Discord's API due to CORS restrictions. 
+
+**✅ Platforms with built-in proxy support (recommended):**
+- Netlify (automatic)
+- Vercel (automatic)
+- Cloudflare Pages (automatic)
+
+**⚠️ Platforms requiring manual proxy setup:**
+- GitHub Pages (needs external proxy)
+- Firebase Hosting (needs external proxy)
+- Other static hosts (needs external proxy)
+
+For detailed proxy setup, see [PROXY_SETUP.md](./PROXY_SETUP.md).
+
 ## Deployment Options
 
 ### 🟢 Option 1: GitHub Pages (Free, Easy)
 
 **Best for**: Public projects, documentation, free hosting
+
+⚠️ **Note**: GitHub Pages doesn't support serverless functions. You'll need to deploy the proxy separately on Netlify/Vercel/Cloudflare (free) or use one of those platforms instead. See [PROXY_SETUP.md](./PROXY_SETUP.md) for details.
 
 1. **Fork or Clone this Repository**
    ```bash
@@ -37,7 +55,11 @@ Step-by-step guide to deploy the Discord Bot Client web version to various stati
    - Select **`/web`** folder
    - Click **Save**
 
-4. **Access Your Site**
+4. **Setup External Proxy** (Required)
+   - See [PROXY_SETUP.md](./PROXY_SETUP.md) for instructions
+   - You can deploy just the proxy to Netlify/Vercel for free
+
+5. **Access Your Site**
    - Wait 1-2 minutes for deployment
    - Visit: `https://YOUR_USERNAME.github.io/DiscordBotClient/`
 
@@ -45,17 +67,21 @@ Step-by-step guide to deploy the Discord Bot Client web version to various stati
 - Add a `CNAME` file in `/web` directory with your domain
 - Configure DNS with a CNAME record pointing to `YOUR_USERNAME.github.io`
 
+**Recommendation**: Use Netlify or Vercel instead for zero-config proxy support.
+
 ---
 
-### 🔷 Option 2: Netlify (Free, Fastest)
+### 🔷 Option 2: Netlify (Free, Fastest) ✅ Recommended
 
-**Best for**: Quick deployments, CI/CD, form handling
+**Best for**: Quick deployments, CI/CD, zero-config proxy
+
+✅ **Built-in proxy support** - No additional setup needed!
 
 #### Method A: Drag & Drop (Easiest)
 
 1. Visit [Netlify Drop](https://app.netlify.com/drop)
 2. Drag the `/web` folder to the upload area
-3. Your site is live instantly!
+3. Your site is live instantly with working proxy!
 4. Get a URL like: `https://random-name-12345.netlify.app`
 
 #### Method B: Git Integration (Recommended)
@@ -71,15 +97,19 @@ Step-by-step guide to deploy the Discord Bot Client web version to various stati
 6. Click **Deploy site**
 7. Get a URL like: `https://random-name-12345.netlify.app`
 
+The proxy function (`/.netlify/functions/discord-proxy`) is automatically deployed!
+
 **Custom Domain**:
 - Go to Site settings > Domain management
 - Add custom domain and follow DNS instructions
 
 ---
 
-### ⚫ Option 3: Vercel (Free, Fast)
+### ⚫ Option 3: Vercel (Free, Fast) ✅ Recommended
 
 **Best for**: Next.js projects, edge functions, serverless
+
+✅ **Built-in proxy support** - No additional setup needed!
 
 1. Visit [vercel.com](https://vercel.com)
 2. Click **"New Project"**
@@ -92,15 +122,19 @@ Step-by-step guide to deploy the Discord Bot Client web version to various stati
 5. Click **Deploy**
 6. Get a URL like: `https://discord-bot-client.vercel.app`
 
+The proxy function (`/api/discord-proxy`) is automatically deployed!
+
 **Custom Domain**:
 - Go to Project settings > Domains
 - Add your domain and configure DNS
 
 ---
 
-### 🟠 Option 4: Cloudflare Pages (Free, Global CDN)
+### 🟠 Option 4: Cloudflare Pages (Free, Global CDN) ✅ Recommended
 
 **Best for**: Global distribution, DDoS protection, edge workers
+
+✅ **Built-in proxy support** - No additional setup needed!
 
 1. Visit [pages.cloudflare.com](https://pages.cloudflare.com)
 2. Click **"Create a project"**
@@ -112,6 +146,8 @@ Step-by-step guide to deploy the Discord Bot Client web version to various stati
    - **Build output directory**: `web`
 6. Click **Save and Deploy**
 7. Get a URL like: `https://discord-bot-client.pages.dev`
+
+The proxy function (`/discord-proxy`) is automatically deployed!
 
 **Custom Domain**:
 - Go to Custom domains

@@ -27,7 +27,7 @@ class DiscordAPI {
         
         // Cloudflare Pages
         if (hostname.includes('pages.dev')) {
-            return '/api/discord-proxy';
+            return '/discord-proxy';
         }
         
         // For local development or other platforms, try Netlify path first
