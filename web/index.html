@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web-based Discord Bot Client - Login with your bot token and interact with Discord">
+    <meta name="keywords" content="discord, bot, client, web, static">
+    <meta name="author" content="Discord Bot Client">
+    <title>Discord Bot Client - Web</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-box">
+                <h1>Discord Bot Client</h1>
+                <p class="subtitle">Web-based Discord Bot Token Login</p>
+                <div class="warning">
+                    ⚠️ Warning: Using bot tokens in a browser exposes them to security risks. 
+                    Only use this for testing or personal bots you control.
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="token-input">Bot Token</label>
+                        <input type="password" id="token-input" placeholder="Enter your bot token" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="show-token">
+                            Show token
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+                <div id="login-error" class="error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="app-screen" class="screen">
+        <div class="app-layout">
+            <!-- Sidebar - Guilds List -->
+            <div class="guilds-sidebar">
+                <div class="guild-home" id="home-button" title="Direct Messages">
+                    <svg viewBox="0 0 28 20" width="28" height="20">
+                        <path fill="currentColor" d="M14,0 L28,20 L0,20 Z"/>
+                    </svg>
+                </div>
+                <div class="guild-separator"></div>
+                <div id="guilds-list"></div>
+                <div class="guild-add" id="logout-button" title="Logout">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M17,7 L15.59,8.41 L18.17,11 L8,11 L8,13 L18.17,13 L15.59,15.59 L17,17 L22,12 L17,7 Z M4,5 L12,5 L12,3 L4,3 C2.89,3 2,3.89 2,5 L2,19 C2,20.1 2.89,21 4,21 L12,21 L12,19 L4,19 L4,5 Z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Channels List -->
+            <div class="channels-sidebar">
+                <div class="channels-header">
+                    <div id="guild-name">Select a Server</div>
+                </div>
+                <div class="channels-list" id="channels-list">
+                    <div class="no-channel">Select a guild from the left sidebar</div>
+                </div>
+                <div class="user-panel">
+                    <div class="user-info">
+                        <div class="user-avatar" id="user-avatar"></div>
+                        <div class="user-details">
+                            <div class="username" id="username">Loading...</div>
+                            <div class="user-tag" id="user-tag">#0000</div>
+                        </div>
+                    </div>
+                    <div class="user-controls">
+                        <button class="icon-button" id="settings-button" title="Settings">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <div class="messages-header">
+                    <div class="channel-info">
+                        <span class="channel-icon">#</span>
+                        <span class="channel-name" id="current-channel-name">Select a channel</span>
+                    </div>
+                    <div class="header-controls">
+                        <span id="connection-status" class="status-indicator">●</span>
+                        <span id="status-text">Connecting...</span>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messages-container">
+                    <div class="no-messages">Select a channel to view messages</div>
+                </div>
+
+                <div class="message-input-container" id="message-input-container" style="display: none;">
+                    <form id="message-form" class="message-form">
+                        <input type="text" id="message-input" placeholder="Message #channel" autocomplete="off">
+                        <button type="submit" class="btn-send">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-button" id="close-settings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Bot Information</h3>
+                    <div class="setting-item">
+                        <label>Bot ID:</label>
+                        <span id="bot-id">N/A</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>Connected Guilds:</label>
+                        <span id="guild-count">0</span>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Appearance</h3>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="compact-mode">
+                            Compact Message Mode
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="dark-mode" checked>
+                            Dark Mode
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Message Limit</h3>
+                    <div class="setting-item">
+                        <label>Messages to load:</label>
+                        <select id="message-limit">
+                            <option value="25">25</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <div id="loading-text">Loading...</div>
+    </div>
+
+    <script src="js/discord-api.js"></script>
+    <script src="js/gateway.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

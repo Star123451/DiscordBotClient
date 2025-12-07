@@ -2,6 +2,10 @@
 
 **DiscordBotClient** allows you to use your bot, just like any other user account, except for Friends and Groups.
 
+> [!TIP]
+> 
+> **🌐 NEW: Web Version Available!** - Try the [static web-based version](./web) that requires no installation. Deploy to GitHub Pages, Netlify, or any static host. Perfect for quick testing and mobile access. [Learn more](./WEB_VERSION.md)
+
 ## Overview
 
 - [Installation](#installation)
@@ -32,6 +36,26 @@ third parties. However, this application is not an official product by
 Discord Inc.
 
 ![Demo Screenshot](https://i.imgur.com/LRj25W2.png)
+
+---
+
+## 🌐 Web Version (NEW!)
+
+A **static web-based version** is now available that requires **zero installation**!
+
+![Web Version Login](https://github.com/user-attachments/assets/837ddbb2-93f1-4757-8a73-c8a6d0cce4fa)
+
+### Quick Deploy:
+- 📁 **Files**: [`/web`](./web) directory
+- 📖 **Docs**: [Web Version Guide](./WEB_VERSION.md)
+- 🚀 **Deploy**: [Deployment Guide](./web/DEPLOYMENT.md)
+
+### One-Click Deploy:
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Star123451/DiscordBotClient)
+
+**Features**: Real-time messaging, guild/channel navigation, message history, dark/light mode, mobile support, and more!
+
+**Note**: Web version is best for testing. For production use, install the desktop version below.
 
 ---
 
