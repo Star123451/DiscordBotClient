@@ -45,6 +45,16 @@ class DiscordAPI {
      */
     async requestViaProxy(endpoint, options = {}) {
         try {
+            // Parse body if it's a JSON string, otherwise use as-is
+            let bodyData = options.body;
+            if (typeof bodyData === 'string') {
+                try {
+                    bodyData = JSON.parse(bodyData);
+                } catch (e) {
+                    // If parsing fails, keep as string
+                }
+            }
+
             const response = await fetch(this.proxyURL, {
                 method: 'POST',
                 headers: {
@@ -53,7 +63,7 @@ class DiscordAPI {
                 body: JSON.stringify({
                     endpoint: endpoint,
                     method: options.method || 'GET',
-                    body: options.body ? JSON.parse(options.body) : undefined,
+                    body: bodyData,
                     token: this.token
                 })
             });

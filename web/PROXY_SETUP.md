@@ -164,26 +164,46 @@ If you're using a custom domain or different setup, you can override the proxy U
 
 ## Security Considerations
 
+### ⚠️ CRITICAL: Wildcard CORS
+
+**The proxy uses wildcard CORS (`Access-Control-Allow-Origin: *`)** for ease of deployment, which means:
+- Any website can potentially access your deployed proxy endpoint
+- If someone discovers your proxy URL, they could use it for their own requests
+- This is acceptable ONLY for test/development bots without sensitive permissions
+
 ### ✅ Safe Practices
 
 1. **Token in Transit**: The proxy receives the bot token but doesn't store it
 2. **HTTPS Only**: All requests should use HTTPS in production
 3. **No Logging**: The proxy should not log tokens (already configured)
 4. **Rate Limiting**: Discord's API rate limits apply
+5. **Deploy Your Own**: Each user should deploy their own instance
 
-### ⚠️ Important Notes
+### ⚠️ Important Security Risks
 
 1. **Bot Token Exposure**: The token is sent from browser to proxy on every request
-2. **Use Test Bots**: Only use this with development/test bots
-3. **No Admin Bots**: Never use bots with admin permissions
-4. **Clear Storage**: Logout clears the token from localStorage
+2. **Wildcard CORS**: Any origin can access your proxy if they know the URL
+3. **No Authentication**: The proxy doesn't validate who's using it
+4. **Public Endpoints**: Serverless functions are publicly accessible URLs
+
+### 🛡️ Risk Mitigation
+
+1. **Use Test Bots Only**: Only use with development/test bots
+2. **No Admin Permissions**: Never use bots with admin/dangerous permissions
+3. **Limited Scope**: Bot should only be in test servers you control
+4. **Regular Token Rotation**: Regenerate bot token frequently
+5. **Monitor Usage**: Check Discord Developer Portal for unusual activity
+6. **Clear Storage**: Always logout when done (clears token from localStorage)
 
 ### 🔒 Production Recommendations
 
-For production bots:
+For production bots, DO NOT use this web version:
 - Use the desktop Electron app instead
 - Or implement proper OAuth2 flow with backend authentication
 - Never expose production bot tokens in browser applications
+- Consider implementing origin validation in the proxy code
+- Add rate limiting per IP address
+- Use environment variables for allowed origins
 
 ## Troubleshooting
 

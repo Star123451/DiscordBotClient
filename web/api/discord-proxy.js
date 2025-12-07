@@ -3,6 +3,16 @@
  * 
  * This serverless function acts as a proxy between the web client and Discord API
  * to avoid CORS issues when making requests directly from the browser.
+ * 
+ * SECURITY NOTE:
+ * - Uses wildcard CORS ('*') to allow any origin for ease of deployment
+ * - Bot tokens are passed through this proxy on every request
+ * - Only use with test/development bots without sensitive permissions
+ * - For production use, consider implementing:
+ *   1. Origin validation against a whitelist
+ *   2. Rate limiting per IP/origin
+ *   3. Token validation/authorization
+ *   4. Request logging for security audit
  */
 
 export default async function handler(req, res) {
