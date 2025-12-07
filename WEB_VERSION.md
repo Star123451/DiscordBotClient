@@ -18,26 +18,37 @@ The web version is a **complete rewrite** that:
 - ✅ Real-time Discord Gateway connection
 - ✅ Send and receive messages
 - ✅ Browse guilds and channels
+- ✅ Built-in serverless proxy for CORS (Netlify/Vercel/Cloudflare)
 
 ## Quick Deploy
 
-### Deploy to Netlify (1 click)
+### Deploy to Netlify (1 click) ✅ Recommended
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Star123451/DiscordBotClient)
 
-### Deploy to Vercel (1 click)
+**Built-in proxy** - No additional setup needed!
+
+### Deploy to Vercel (1 click) ✅ Recommended
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Star123451/DiscordBotClient)
+
+**Built-in proxy** - No additional setup needed!
 
 ### Deploy to GitHub Pages
 1. Go to repository **Settings** > **Pages**
 2. Set source to **main branch** and **`/web`** folder
 3. Click **Save**
-4. Wait 1-2 minutes and visit your GitHub Pages URL
+4. **⚠️ Setup proxy separately** - See [PROXY_SETUP.md](./web/PROXY_SETUP.md)
+
+**Note**: Netlify/Vercel recommended for zero-config proxy support.
 
 ### Local Testing
 ```bash
 cd web
+# Simple server (proxy won't work)
 python -m http.server 8000
-# Visit http://localhost:8000
+
+# OR with Netlify CLI (proxy works)
+npm install -g netlify-cli
+netlify dev
 ```
 
 ## Feature Comparison
