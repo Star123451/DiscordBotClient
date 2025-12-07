@@ -6,39 +6,115 @@ class DiscordAPI {
         this.token = token;
         this.baseURL = 'https://discord.com/api/v10';
         this.user = null;
+        this.proxyURL = this.detectProxyURL();
     }
 
     /**
-     * Make an API request
+     * Detect proxy URL based on deployment platform
      */
-    async request(endpoint, options = {}) {
-        const url = `${this.baseURL}${endpoint}`;
-        const headers = {
-            'Authorization': `Bot ${this.token}`,
-            'Content-Type': 'application/json',
-            ...options.headers
-        };
+    detectProxyURL() {
+        const hostname = window.location.hostname;
+        
+        // Netlify
+        if (hostname.includes('netlify.app') || hostname.includes('netlify.com')) {
+            return '/.netlify/functions/discord-proxy';
+        }
+        
+        // Vercel
+        if (hostname.includes('vercel.app') || hostname.includes('vercel.com')) {
+            return '/api/discord-proxy';
+        }
+        
+        // Cloudflare Pages
+        if (hostname.includes('pages.dev')) {
+            return '/api/discord-proxy';
+        }
+        
+        // For local development or other platforms, try Netlify path first
+        // Users can override this by setting window.DISCORD_PROXY_URL
+        if (window.DISCORD_PROXY_URL) {
+            return window.DISCORD_PROXY_URL;
+        }
+        
+        // Default to Netlify format
+        return '/.netlify/functions/discord-proxy';
+    }
 
+    /**
+     * Make an API request through proxy
+     */
+    async requestViaProxy(endpoint, options = {}) {
         try {
-            const response = await fetch(url, {
-                ...options,
-                headers
+            const response = await fetch(this.proxyURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    endpoint: endpoint,
+                    method: options.method || 'GET',
+                    body: options.body ? JSON.parse(options.body) : undefined,
+                    token: this.token
+                })
             });
 
-            if (!response.ok) {
-                const error = await response.json().catch(() => ({}));
-                throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
+            const result = await response.json();
+
+            if (!result.ok) {
+                throw new Error(result.data?.message || `HTTP ${result.status}: ${response.statusText}`);
             }
 
             // Handle 204 No Content
-            if (response.status === 204) {
+            if (result.status === 204) {
                 return null;
             }
 
-            return await response.json();
+            return result.data;
         } catch (error) {
             console.error('API Request Error:', error);
             throw error;
+        }
+    }
+
+    /**
+     * Make an API request (direct or via proxy)
+     */
+    async request(endpoint, options = {}) {
+        // Try proxy first
+        try {
+            return await this.requestViaProxy(endpoint, options);
+        } catch (proxyError) {
+            console.warn('Proxy request failed, attempting direct request:', proxyError);
+            
+            // Fallback to direct request (will fail with CORS in most cases)
+            const url = `${this.baseURL}${endpoint}`;
+            const headers = {
+                'Authorization': `Bot ${this.token}`,
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({}));
+                    throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                // Handle 204 No Content
+                if (response.status === 204) {
+                    return null;
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('API Request Error:', error);
+                throw error;
+            }
         }
     }
 
