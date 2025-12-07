@@ -15,18 +15,20 @@ class DiscordAPI {
     detectProxyURL() {
         const hostname = window.location.hostname;
         
-        // Netlify
-        if (hostname.includes('netlify.app') || hostname.includes('netlify.com')) {
+        // Netlify - check if hostname ends with netlify.app or netlify.com
+        if (hostname.endsWith('.netlify.app') || hostname.endsWith('.netlify.com') || 
+            hostname === 'netlify.app' || hostname === 'netlify.com') {
             return '/.netlify/functions/discord-proxy';
         }
         
-        // Vercel
-        if (hostname.includes('vercel.app') || hostname.includes('vercel.com')) {
+        // Vercel - check if hostname ends with vercel.app or vercel.com
+        if (hostname.endsWith('.vercel.app') || hostname.endsWith('.vercel.com') || 
+            hostname === 'vercel.app' || hostname === 'vercel.com') {
             return '/api/discord-proxy';
         }
         
-        // Cloudflare Pages
-        if (hostname.includes('pages.dev')) {
+        // Cloudflare Pages - check if hostname ends with pages.dev
+        if (hostname.endsWith('.pages.dev') || hostname === 'pages.dev') {
             return '/discord-proxy';
         }
         
