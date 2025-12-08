@@ -126,18 +126,18 @@ The web app automatically detects which platform it's running on:
 detectProxyURL() {
   const hostname = window.location.hostname;
   
-  // Netlify
-  if (hostname.includes('netlify.app')) {
+  // Netlify - check if hostname ends with netlify.app or netlify.com
+  if (hostname.endsWith('.netlify.app') || hostname.endsWith('.netlify.com')) {
     return '/.netlify/functions/discord-proxy';
   }
   
-  // Vercel
-  if (hostname.includes('vercel.app')) {
+  // Vercel - check if hostname ends with vercel.app or vercel.com
+  if (hostname.endsWith('.vercel.app') || hostname.endsWith('.vercel.com')) {
     return '/api/discord-proxy';
   }
   
-  // Cloudflare Pages
-  if (hostname.includes('pages.dev')) {
+  // Cloudflare Pages - check if hostname ends with pages.dev
+  if (hostname.endsWith('.pages.dev')) {
     return '/discord-proxy';
   }
   

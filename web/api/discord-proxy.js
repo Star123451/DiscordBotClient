@@ -28,6 +28,7 @@ export default async function handler(req, res) {
 
   // Only allow POST requests
   if (req.method !== 'POST') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
@@ -37,6 +38,7 @@ export default async function handler(req, res) {
 
     // Validate required fields
     if (!endpoint || !token) {
+      res.setHeader('Access-Control-Allow-Origin', '*');
       return res.status(400).json({ 
         error: 'Missing required fields: endpoint and token' 
       });
