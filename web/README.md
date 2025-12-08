@@ -4,6 +4,15 @@ A **static web-based** Discord bot client that runs entirely in your browser. No
 
 ⚠️ **SECURITY WARNING**: This web version exposes your bot token in the browser. Only use it for testing, development, or personal bots you fully control. Never use it with production bots or share the page while logged in.
 
+## 🔧 Requirements
+
+**Serverless Proxy Required**: This app needs a proxy to avoid CORS errors when calling Discord's API.
+
+✅ **Automatic proxy** on: Netlify, Vercel, Cloudflare Pages (recommended)  
+⚠️ **Manual setup** on: GitHub Pages, Firebase, other hosts
+
+See [PROXY_SETUP.md](./PROXY_SETUP.md) for details.
+
 ## Features
 
 ✅ **Fully Static** - No backend server required, deployable on any static host  
@@ -19,37 +28,37 @@ A **static web-based** Discord bot client that runs entirely in your browser. No
 
 ## Deployment Options
 
-### Option 1: GitHub Pages (Recommended)
-
-1. Fork or clone this repository
-2. Go to repository Settings > Pages
-3. Set source to main branch and `/web` folder (or root if you moved files)
-4. Save and wait for deployment
-5. Visit your GitHub Pages URL
-
-### Option 2: Netlify
+### Option 1: Netlify ✅ Recommended (Zero-Config Proxy)
 
 1. Sign up at [netlify.com](https://netlify.com)
 2. Drag and drop the `web` folder to Netlify
-3. Your site is live instantly!
+3. Your site is live instantly with working proxy!
 
-### Option 3: Vercel
+### Option 2: Vercel ✅ Recommended (Zero-Config Proxy)
 
 1. Sign up at [vercel.com](https://vercel.com)
 2. Import your repository
 3. Set the root directory to `web`
-4. Deploy
+4. Deploy - proxy works automatically!
 
-### Option 4: Cloudflare Pages
+### Option 3: Cloudflare Pages ✅ Recommended (Zero-Config Proxy)
 
 1. Sign up at [pages.cloudflare.com](https://pages.cloudflare.com)
 2. Connect your GitHub repository
 3. Set build output directory to `web`
-4. Deploy
+4. Deploy - proxy works automatically!
+
+### Option 4: GitHub Pages (Manual Proxy Setup)
+
+1. Fork or clone this repository
+2. Go to repository Settings > Pages
+3. Set source to main branch and `/web` folder
+4. Deploy proxy separately (see [PROXY_SETUP.md](./PROXY_SETUP.md))
+5. Visit your GitHub Pages URL
 
 ### Option 5: Local Development
 
-Simply open `index.html` in your browser:
+For local testing, you can run a simple HTTP server, but note that the proxy won't work locally without additional setup:
 
 ```bash
 cd web
@@ -58,6 +67,15 @@ python -m http.server 8000
 ```
 
 Then visit `http://localhost:8000`
+
+**Note**: For full functionality locally, install Netlify CLI or Vercel CLI to test the proxy:
+```bash
+npm install -g netlify-cli
+cd web
+netlify dev
+```
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## How to Use
 

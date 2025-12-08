@@ -1,6 +1,7 @@
 # Netlify configuration for Discord Bot Client Web
 [build]
   publish = "."
+  functions = "netlify/functions"
   
 [[redirects]]
   from = "/*"
